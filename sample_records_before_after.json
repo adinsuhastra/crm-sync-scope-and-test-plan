@@ -1,0 +1,136 @@
+{
+  "demoOnly": true,
+  "containsRealData": false,
+  "scenario": "Fictional CRM sync planning sample for GoHighLevel and Close.io",
+  "syncDirectionOptions": [
+    "Close.io to GoHighLevel",
+    "GoHighLevel to Close.io",
+    "Bidirectional only if explicitly required"
+  ],
+  "beforeRecords": {
+    "closeIo": [
+      {
+        "closeLeadId": "close_demo_001",
+        "contactName": "Jordan Sample",
+        "email": "jordan.sample@example.com",
+        "phone": "+1-555-0101",
+        "company": "Sample Roofing Co",
+        "status": "Meeting Scheduled",
+        "appointmentDate": "2026-06-03T14:00:00-05:00",
+        "source": "close_outbound",
+        "notes": "Asked for automation consultation."
+      },
+      {
+        "closeLeadId": "close_demo_002",
+        "contactName": "Casey Demo",
+        "email": "casey.demo@example.com",
+        "phone": "+1-555-0102",
+        "company": "Demo Fitness Studio",
+        "status": "Potential",
+        "appointmentDate": null,
+        "source": "manual_entry",
+        "notes": "Interested in CRM cleanup."
+      }
+    ],
+    "goHighLevel": [
+      {
+        "ghlContactId": "ghl_demo_900",
+        "firstName": "Jordan",
+        "lastName": "Sample",
+        "email": "jordan.sample@example.com",
+        "phone": "+15550101",
+        "companyName": "Sample Roofing Co",
+        "pipelineStage": "New Lead",
+        "appointmentStatus": null,
+        "source": "website_form",
+        "doNotContact": false
+      },
+      {
+        "ghlContactId": "ghl_demo_901",
+        "firstName": "Taylor",
+        "lastName": "Example",
+        "email": "taylor.example@example.com",
+        "phone": "+15550103",
+        "companyName": "Example Dental",
+        "pipelineStage": "Appointment Booked",
+        "appointmentStatus": "confirmed",
+        "source": "ghl_form",
+        "doNotContact": false
+      }
+    ]
+  },
+  "duplicateDetectionExamples": [
+    {
+      "case": "Exact email match",
+      "sourceRecord": "close_demo_001",
+      "destinationRecord": "ghl_demo_900",
+      "matchConfidence": "high",
+      "action": "update existing GoHighLevel contact instead of creating a duplicate"
+    },
+    {
+      "case": "Phone only match",
+      "sourceRecord": "close_demo_002",
+      "destinationRecord": null,
+      "matchConfidence": "medium",
+      "action": "create only if normalized phone does not match an existing record"
+    },
+    {
+      "case": "Name and company only",
+      "sourceRecord": "manual_review_demo_001",
+      "destinationRecord": "possible_match_demo_001",
+      "matchConfidence": "low",
+      "action": "manual review required before update or merge"
+    }
+  ],
+  "afterRecords": {
+    "goHighLevelUpdatesFromClose": [
+      {
+        "ghlContactId": "ghl_demo_900",
+        "closeLeadId": "close_demo_001",
+        "firstName": "Jordan",
+        "lastName": "Sample",
+        "email": "jordan.sample@example.com",
+        "phone": "+15550101",
+        "companyName": "Sample Roofing Co",
+        "pipelineStage": "Appointment Booked",
+        "appointmentStatus": "scheduled",
+        "appointmentDate": "2026-06-03T14:00:00-05:00",
+        "source": "website_form",
+        "syncStatus": "updated_existing_record",
+        "manualApproval": "required_before_live_sync",
+        "reviewNotes": "Email match found. Stage update allowed only after client approves source-of-truth rule."
+      },
+      {
+        "ghlContactId": "new_pending_approval",
+        "closeLeadId": "close_demo_002",
+        "firstName": "Casey",
+        "lastName": "Demo",
+        "email": "casey.demo@example.com",
+        "phone": "+15550102",
+        "companyName": "Demo Fitness Studio",
+        "pipelineStage": "New Lead",
+        "appointmentStatus": null,
+        "source": "manual_entry",
+        "syncStatus": "ready_to_create_after_approval",
+        "manualApproval": "required_before_create",
+        "reviewNotes": "No duplicate found by exact email. Confirm phone normalization before create."
+      }
+    ]
+  },
+  "protectedFields": [
+    "doNotContact",
+    "owner",
+    "pipelineStage",
+    "source",
+    "wonOrLostStatus",
+    "manualNotes"
+  ],
+  "safetyControls": [
+    "fictional sample data only",
+    "no CRM credentials",
+    "no API calls",
+    "manual approval before live sync",
+    "duplicate detection before create/update",
+    "protected fields are not overwritten automatically"
+  ]
+}
